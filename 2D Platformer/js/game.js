@@ -47,22 +47,19 @@ class Player{
 		{
 			this.velocity.y += gravity
 		}
-		else
-		{
-			this.velocity.y = 0
-		}
 	}
 }
 
 class Platform{
 	constructor({x,y, image}){
+
 		// declare and initialize Starting Positon
 		this.position = {
 			x,
 			y
 		}
 
-		// declare and initialize Dimensions
+		// declare and initialize Dimensions and image
 		this.image = image
 		this.width = image.width
 		this.height = image.height
@@ -77,13 +74,14 @@ class Platform{
 
 class GenericObject{
 	constructor({x,y, image}){
+
 		// declare and initialize Starting Positon
 		this.position = {
 			x,
 			y
 		}
 
-		// declare and initialize Dimensions
+		// declare and initialize Dimensions and image
 		this.image = image
 		this.width = image.width
 		this.height = image.height
@@ -103,23 +101,26 @@ function CreateImage(imageSrc)
 	return image
 }
 
-const platformImage = CreateImage('./img/platform.png')
+// Set platform image
+let platformImage = CreateImage('./img/platform.png')
 
 // Create New Player
-const player = new Player()
+let player = new Player()
 
 // Create New Platforms
-const platforms = [
-	new Platform({x: -1, y: 470, image: platformImage}),
-	new Platform({x: platformImage.width -3 , y: 470, image: platformImage})
+let platforms = [
+new Platform({x: -1, y: 470, image: platformImage}),
+new Platform({x: platformImage.width -3 , y: 470, image: platformImage}),
+new Platform({x: platformImage.width * 2 + 200 , y: 470, image: platformImage})
 ]
 
-const genericObjects = [
-	new GenericObject({ x: 0, y: 0, image: CreateImage('./img/background.png')})
+let genericObjects = [
+new GenericObject({ x: -1, y: -1, image: CreateImage('./img/background.png')}),
+new GenericObject({ x: -1, y: -1, image: CreateImage('./img/hills.png')})
 ]
 
 // Create key Array with Properties
-const keys = {
+let keys = {
 	right:{
 		pressed: false
 	},
@@ -129,6 +130,39 @@ const keys = {
 }
 
 let scrollOffset = 0
+
+function init()
+{
+	// Set platform image
+	platformImage = CreateImage('./img/platform.png')
+
+	// Create New Player
+	player = new Player()
+
+	// Create New Platforms
+	platforms = [
+	new Platform({x: -1, y: 470, image: platformImage}),
+	new Platform({x: platformImage.width -3 , y: 470, image: platformImage}),
+	new Platform({x: platformImage.width * 2 + 200 , y: 470, image: platformImage})
+	]
+
+	genericObjects = [
+	new GenericObject({ x: -1, y: -1, image: CreateImage('./img/background.png')}),
+	new GenericObject({ x: -1, y: -1, image: CreateImage('./img/hills.png')})
+	]
+
+	// Create key Array with Properties
+	keys = {
+		right:{
+			pressed: false
+		},
+		left:{
+			pressed: false
+		}
+	}
+
+	scrollOffset = 0
+}
 
 // recursive loop method to change player and platform properties over time
 function animate(){
@@ -159,12 +193,15 @@ function animate(){
 	{
 		player.velocity.x = 0
 
-		// Move All platforms
+		// Move All platforms and genericObjects to imply a parallax scrolling effect
 		if(keys.right.pressed)
 		{
 			scrollOffset += 5
 			platforms.forEach(platform =>{
 				platform.position.x -= 5
+			})
+			genericObjects.forEach(genericObjects => {
+				genericObjects.position.x -= 3
 			})
 		}
 		else if(keys.left.pressed)
@@ -172,6 +209,9 @@ function animate(){
 			scrollOffset -= 5
 			platforms.forEach(platform =>{
 				platform.position.x += 5
+			})
+			genericObjects.forEach(genericObjects => {
+				genericObjects.position.x += 3
 			})
 		}
 	}
@@ -186,9 +226,16 @@ function animate(){
 		}
 	})
 
+	// Win Condition
 	if(scrollOffset > 2000)
 	{
 		console.log('You Win!!!')
+	}
+
+	// Lose Condition
+	if (player.position.y > canvas.height)
+	{
+		init()
 	}
 }
 
