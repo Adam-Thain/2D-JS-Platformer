@@ -2,8 +2,8 @@ const canvas = document.querySelector('canvas')
 const c = canvas.getContext("2d")
 
 // set canvas dimensions
-canvas.width = innerWidth
-canvas.height = innerHeight
+canvas.width = 1024
+canvas.height = 576
 
 const gravity = 0.5
 
@@ -63,27 +63,30 @@ class Platform{
 		}
 
 		// declare and initialize Dimensions
-		this.width = 200
-		this.height = 20
+		this.image = image
+		this.width = image.width
+		this.height = image.height
 	}
 
-	draw(){
-		
-		// Set Colour
-		c.fillStyle = 'blue'
+	draw(){		
 
-		// Set position and dimensions
-		c.fillRect(this.position.x,this.position.y,this.width,this.height)
+		// Draw platform
+		c.drawImage(this.image,this.position.x,this.position.y)
 	}
 }
+
+const image = new Image()
+image.src = './img/platform.png'
+
+console.log(image)
 
 // Create New Player
 const player = new Player()
 
 // Create New Platforms
 const platforms = [
-	new Platform({x:200,y:100}),
-	new Platform({x:500,y:200})
+	new Platform({x:-1,y:470,image: image}),
+	new Platform({x:500,y:200,image: image})
 ]
 
 // Create key Array with Properties
@@ -96,42 +99,48 @@ const keys = {
 	}
 }
 
+let scrollOffset = 0
+
 // recursive loop method to change player and platform properties over time
 function animate(){
 	requestAnimationFrame(animate)
-	c.clearRect(0,0,canvas.width,canvas.height)
-
-	// Update player position
-	player.update()
+	c.fillStyle = 'white'
+	c.fillRect(0,0,canvas.width,canvas.height)
 
 	// Update platform positions
 	platforms.forEach(platform =>{
 		platform.draw()
 	})
 
+	// Update player position
+	player.update()
+
 	// Move player if player is within bounds
 	if(keys.right.pressed && player.position.x < 400){
 		player.velocity.x = 5
 	}
-	else if(keys.left.pressed  && player.position.x > 100){
+	else if(keys.left.pressed && player.position.x > 100){
 		player.velocity.x = -5
 	}
-	else{
+	else
+	{
 		player.velocity.x = 0
-	}
 
-	// Move All platforms
-	if(keys.right.pressed)
-	{
-		platforms.forEach(platform =>{
-			platform.position.x -=5
-		})
-	}
-	else if(keys.left.pressed)
-	{
-		platforms.forEach(platform =>{
-			platform.position.x += 5
-		})
+		// Move All platforms
+		if(keys.right.pressed)
+		{
+			scrollOffset += 5
+			platforms.forEach(platform =>{
+				platform.position.x -= 5
+			})
+		}
+		else if(keys.left.pressed)
+		{
+			scrollOffset -= 5
+			platforms.forEach(platform =>{
+				platform.position.x += 5
+			})
+		}
 	}
 
 	// Collision detection for all platformss
@@ -143,6 +152,11 @@ function animate(){
 			player.velocity.y = 0
 		}
 	})
+
+	if(scrollOffset > 2000)
+	{
+		console.log('You Win!!!')
+	}
 }
 
 animate()
