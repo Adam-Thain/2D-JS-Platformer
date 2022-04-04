@@ -55,7 +55,7 @@ class Player{
 }
 
 class Platform{
-	constructor({x,y}){
+	constructor({x,y, image}){
 		// declare and initialize Starting Positon
 		this.position = {
 			x,
@@ -75,18 +75,47 @@ class Platform{
 	}
 }
 
-const image = new Image()
-image.src = './img/platform.png'
+class GenericObject{
+	constructor({x,y, image}){
+		// declare and initialize Starting Positon
+		this.position = {
+			x,
+			y
+		}
 
-console.log(image)
+		// declare and initialize Dimensions
+		this.image = image
+		this.width = image.width
+		this.height = image.height
+	}
+
+	draw(){		
+
+		// Draw platform
+		c.drawImage(this.image,this.position.x,this.position.y)
+	}
+}
+
+function CreateImage(imageSrc)
+{
+	const image = new Image()
+	image.src = imageSrc
+	return image
+}
+
+const platformImage = CreateImage('./img/platform.png')
 
 // Create New Player
 const player = new Player()
 
 // Create New Platforms
 const platforms = [
-	new Platform({x:-1,y:470,image: image}),
-	new Platform({x:500,y:200,image: image})
+	new Platform({x: -1, y: 470, image: platformImage}),
+	new Platform({x: platformImage.width -3 , y: 470, image: platformImage})
+]
+
+const genericObjects = [
+	new GenericObject({ x: 0, y: 0, image: CreateImage('./img/background.png')})
 ]
 
 // Create key Array with Properties
@@ -106,6 +135,10 @@ function animate(){
 	requestAnimationFrame(animate)
 	c.fillStyle = 'white'
 	c.fillRect(0,0,canvas.width,canvas.height)
+
+	genericObjects.forEach(genericObject => {
+		genericObject.draw()
+	})
 
 	// Update platform positions
 	platforms.forEach(platform =>{
