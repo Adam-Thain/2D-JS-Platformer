@@ -1,4 +1,4 @@
-const canvas = document.querySelector('canvas')
+const canvas = document.getElementById('gameCanvas')
 const c = canvas.getContext("2d")
 
 // set canvas dimensions
@@ -185,7 +185,7 @@ function animate(){
 	player.update()
 
 	// Move player if player is within bounds
-	if(keys.right.pressed && player.position.x < 400){
+	if(keys.right.pressed && player.position.x < canvas.width / 2){
 		player.velocity.x = player.speed
 	}
 	else if((keys.left.pressed && player.position.x > 100) || (keys.left.pressed && scrollOffset === 0 && player.position.x > 0)){
