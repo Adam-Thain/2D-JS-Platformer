@@ -5,10 +5,13 @@ const c = canvas.getContext("2d")
 canvas.width = 1024
 canvas.height = 576
 
-const gravity = 0.5
+const gravity = .5
 
 class Player{
 	constructor(){
+
+		// declare and initialize player movement speed
+		this.speed = 5
 
 		// declare and initialize Starting Positon
 		this.position = {
@@ -19,7 +22,7 @@ class Player{
 		// declare and initialize velocity
 		this.velocity = {
 			x:0,
-			y:1
+			y:0
 		}
 
 		// declare and initialize Dimensions
@@ -36,6 +39,7 @@ class Player{
 
 	}
 	update(){
+
 		this.draw()	
 
 		// Update X and Y Positions
@@ -104,20 +108,17 @@ function CreateImage(imageSrc)
 // Set platform image
 let platformImage = CreateImage('./img/platform.png')
 
+// Set platformSmallTall image
+let platformSmallTallImage = CreateImage('./img/platformSmallTall.png')
+
 // Create New Player
 let player = new Player()
 
 // Create New Platforms
-let platforms = [
-new Platform({x: -1, y: 470, image: platformImage}),
-new Platform({x: platformImage.width -3 , y: 470, image: platformImage}),
-new Platform({x: platformImage.width * 2 + 200 , y: 470, image: platformImage})
-]
+let platforms = []
 
-let genericObjects = [
-new GenericObject({ x: -1, y: -1, image: CreateImage('./img/background.png')}),
-new GenericObject({ x: -1, y: -1, image: CreateImage('./img/hills.png')})
-]
+// Create New GenericObjects
+let genericObjects = []
 
 // Create key Array with Properties
 let keys = {
@@ -133,17 +134,18 @@ let scrollOffset = 0
 
 function init()
 {
-	// Set platform image
-	platformImage = CreateImage('./img/platform.png')
-
 	// Create New Player
 	player = new Player()
 
 	// Create New Platforms
 	platforms = [
+	new Platform({x: platformImage.width * 4 + 300 - 2 + platformImage.width - platformSmallTallImage.width , y: 270, image: platformSmallTallImage}),
 	new Platform({x: -1, y: 470, image: platformImage}),
 	new Platform({x: platformImage.width -3 , y: 470, image: platformImage}),
-	new Platform({x: platformImage.width * 2 + 200 , y: 470, image: platformImage})
+	new Platform({x: platformImage.width * 2 + 100 , y: 470, image: platformImage}),
+	new Platform({x: platformImage.width * 3 + 300 , y: 470, image: platformImage}),
+	new Platform({x: platformImage.width * 4 + 300 - 2 , y: 470, image: platformImage}),
+	new Platform({x: platformImage.width * 5 + 600 - 2 , y: 470, image: platformImage})
 	]
 
 	genericObjects = [
@@ -184,10 +186,10 @@ function animate(){
 
 	// Move player if player is within bounds
 	if(keys.right.pressed && player.position.x < 400){
-		player.velocity.x = 5
+		player.velocity.x = player.speed
 	}
-	else if(keys.left.pressed && player.position.x > 100){
-		player.velocity.x = -5
+	else if((keys.left.pressed && player.position.x > 100) || (keys.left.pressed && scrollOffset === 0 && player.position.x > 0)){
+		player.velocity.x = -player.speed
 	}
 	else
 	{
@@ -196,22 +198,22 @@ function animate(){
 		// Move All platforms and genericObjects to imply a parallax scrolling effect
 		if(keys.right.pressed)
 		{
-			scrollOffset += 5
+			scrollOffset += player.speed
 			platforms.forEach(platform =>{
-				platform.position.x -= 5
+				platform.position.x -= player.speed
 			})
 			genericObjects.forEach(genericObjects => {
-				genericObjects.position.x -= 3
+				genericObjects.position.x -= player.speed * .66
 			})
 		}
-		else if(keys.left.pressed)
+		else if(keys.left.pressed && scrollOffset > 0)
 		{
-			scrollOffset -= 5
+			scrollOffset -= player.speed
 			platforms.forEach(platform =>{
-				platform.position.x += 5
+				platform.position.x += player.speed
 			})
 			genericObjects.forEach(genericObjects => {
-				genericObjects.position.x += 3
+				genericObjects.position.x += player.speed * .66
 			})
 		}
 	}
@@ -221,13 +223,15 @@ function animate(){
 		if(player.position.y + player.height <= platform.position.y 
 			&& player.position.y + player.height + player.velocity.y >= platform.position.y 
 			&& player.position.x + player.width >= platform.position.x
-			&& player.position.x <= platform.position.x + platform.width){
+			&& player.position.x <= platform.position.x + platform.width
+		)
+		{
 			player.velocity.y = 0
 		}
 	})
 
 	// Win Condition
-	if(scrollOffset > 2000)
+	if(scrollOffset > platformImage.width * 5 + 600 - 2)
 	{
 		console.log('You Win!!!')
 	}
@@ -239,21 +243,16 @@ function animate(){
 	}
 }
 
+init()
 animate()
 
 // Add Event Listener for Key press
 addEventListener('keydown',(event) => {
 	switch(event.key){
-		// Up
-		case 'w':
-			console.log('Up Pressed')
-			player.velocity.y -= 20
-		break
 		// Left 
 		case 'a':
 			console.log('Left Pressed')
 			keys.left.pressed = true
-
 		break
 		// Down
 		case 's':
@@ -264,16 +263,17 @@ addEventListener('keydown',(event) => {
 			console.log('Right Pressed')
 			keys.right.pressed = true
 		break
+		// Up
+		case 'w':
+			console.log('Up Pressed')
+			player.velocity.y -= 17.5
+		break
 	}
 })
 
 // Add Event Listener for Key release
 addEventListener('keyup',(event) => {
 	switch(event.key){
-		// Up
-		case 'w':
-			console.log('Up Released')
-		break
 		// Left 
 		case 'a':
 			console.log('Left Released')
@@ -287,6 +287,10 @@ addEventListener('keyup',(event) => {
 		case 'd':
 			console.log('Right Released')
 			keys.right.pressed = false
+		break
+		// Up
+		case 'w':
+			console.log('Up Released')
 		break
 	}
 })
