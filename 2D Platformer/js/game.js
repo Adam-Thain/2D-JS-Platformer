@@ -13,10 +13,13 @@ class Player{
 		// declare and initialize player movement speed
 		this.speed = 5
 
+		// declare and initialize player jump boolean
+		this.canJump = true;
+
 		// declare and initialize Starting Positon
 		this.position = {
 			x:100,
-			y:100
+			y:439
 		}
 
 		// declare and initialize velocity
@@ -49,6 +52,10 @@ class Player{
 		// Allow Gravity within Screen Dimensions
 		if(this.position.y + this.height + this.velocity.y <= canvas.height)
 		{
+			// Disable jumping during falls
+			this.canJump = false
+
+			// add gravity to simulate falling
 			this.velocity.y += gravity
 		}
 	}
@@ -132,6 +139,10 @@ let keys = {
 
 let scrollOffset = 0
 
+let score = 0
+
+let lives = 3
+
 function init()
 {
 	// Create New Player
@@ -172,12 +183,14 @@ function animate(){
 	c.fillStyle = 'white'
 	c.fillRect(0,0,canvas.width,canvas.height)
 
-	genericObjects.forEach(genericObject => {
+	genericObjects.forEach(genericObject => 
+		{
 		genericObject.draw()
 	})
 
 	// Update platform positions
-	platforms.forEach(platform =>{
+	platforms.forEach(platform =>
+	{
 		platform.draw()
 	})
 
@@ -185,10 +198,12 @@ function animate(){
 	player.update()
 
 	// Move player if player is within bounds
-	if(keys.right.pressed && player.position.x < canvas.width / 2){
+	if(keys.right.pressed && player.position.x < canvas.width / 2)
+	{
 		player.velocity.x = player.speed
 	}
-	else if((keys.left.pressed && player.position.x > 100) || (keys.left.pressed && scrollOffset === 0 && player.position.x > 0)){
+	else if((keys.left.pressed && player.position.x > 100) || (keys.left.pressed && scrollOffset === 0 && player.position.x > 0))
+	{
 		player.velocity.x = -player.speed
 	}
 	else
@@ -199,20 +214,24 @@ function animate(){
 		if(keys.right.pressed)
 		{
 			scrollOffset += player.speed
-			platforms.forEach(platform =>{
+			platforms.forEach(platform =>
+			{
 				platform.position.x -= player.speed
 			})
-			genericObjects.forEach(genericObjects => {
+			genericObjects.forEach(genericObjects => 
+			{
 				genericObjects.position.x -= player.speed * .66
 			})
 		}
 		else if(keys.left.pressed && scrollOffset > 0)
 		{
 			scrollOffset -= player.speed
-			platforms.forEach(platform =>{
+			platforms.forEach(platform =>
+			{
 				platform.position.x += player.speed
 			})
-			genericObjects.forEach(genericObjects => {
+			genericObjects.forEach(genericObjects => 
+			{
 				genericObjects.position.x += player.speed * .66
 			})
 		}
@@ -227,6 +246,7 @@ function animate(){
 		)
 		{
 			player.velocity.y = 0
+			player.canJump = true
 		}
 	})
 
@@ -239,8 +259,27 @@ function animate(){
 	// Lose Condition
 	if (player.position.y > canvas.height)
 	{
+		lives -= 1
 		init()
 	}
+
+	c.font = 'italic 32px big noodle titling'
+	c.lineJoin = 'miter';
+    c.miterLimit = 2; 
+	c.strokeStyle = 'black';
+	c.lineWidth = 6;
+	c.strokeText('Score: ' + score, 10, 35);
+	c.fillStyle = 'cyan'
+	c.fillText('Score: ' + score, 10, 35)
+
+	c.font = 'italic 32px big noodle titling'
+	c.lineJoin = 'miter';
+    c.miterLimit = 2; 
+	c.strokeStyle = 'black';
+	c.lineWidth = 6;
+	c.strokeText('Lives: ' + lives, 10, 70);
+	c.fillStyle = 'red'
+	c.fillText('Lives: ' + lives, 10, 70)
 }
 
 init()
@@ -251,22 +290,23 @@ addEventListener('keydown',(event) => {
 	switch(event.key){
 		// Left 
 		case 'a':
-			console.log('Left Pressed')
 			keys.left.pressed = true
 		break
 		// Down
 		case 's':
-			console.log('Down Pressed')
 		break
 		// Right
 		case 'd':
-			console.log('Right Pressed')
 			keys.right.pressed = true
 		break
 		// Up
 		case 'w':
-			console.log('Up Pressed')
-			player.velocity.y -= 17.5
+
+			// If the player can jump
+			if(player.canJump == true)
+			{
+				player.velocity.y -= 17.5
+			}
 		break
 	}
 })
@@ -276,21 +316,19 @@ addEventListener('keyup',(event) => {
 	switch(event.key){
 		// Left 
 		case 'a':
-			console.log('Left Released')
 			keys.left.pressed = false
 		break
 		// Down
 		case 's':
-			console.log('Down Released')
+
 		break
 		// Right
 		case 'd':
-			console.log('Right Released')
 			keys.right.pressed = false
 		break
 		// Up
 		case 'w':
-			console.log('Up Released')
+
 		break
 	}
 })
