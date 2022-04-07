@@ -18,3 +18,34 @@ body
     font-family: 'big noodle titling';
     src: url("./fonts/big_noodle_titling.ttf");
 }
+
+#splashScreen
+{
+    text-align:center;
+}
+
+#header
+{    
+    font-size: larger;
+    font-style: italic;
+    font-weight: normal;
+    font-family: 'big noodle titling';
+    color: red;
+    src: url("./fonts/big_noodle_titling.ttf");
+}
+
+#startButton
+{
+    position: relative;
+    display: inline-block;
+    background-color: red;
+    border-radius: 5px;
+    border-color: brown;
+    font-style: italic;
+    font-weight: normal;
+    font-family: 'big noodle titling';
+    src: url("./fonts/big_noodle_titling.ttf");
+    width: 100px;
+    height: 40px;
+    text-align: center;
+}

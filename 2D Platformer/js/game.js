@@ -1,5 +1,6 @@
 const canvas = document.getElementById('gameCanvas')
 const c = canvas.getContext("2d")
+const startbtn = document.getElementById("startButton");
 
 // set canvas dimensions
 canvas.width = 1024
@@ -137,12 +138,16 @@ let keys = {
 	}
 }
 
+// Declare and initialize scrollOffset
 let scrollOffset = 0
 
+// Declare and initialize score
 let score = 0
 
+// Declare and initialize lives
 let lives = 3
 
+// Initialize the game
 function init()
 {
 	// Create New Player
@@ -174,6 +179,7 @@ function init()
 		}
 	}
 
+	// Reset ScrollOffset
 	scrollOffset = 0
 }
 
@@ -282,6 +288,11 @@ function animate(){
 	c.fillText('Lives: ' + lives, 10, 70)
 }
 
+function startGame()
+{
+	console.log("Game Started")
+}
+
 init()
 animate()
 
@@ -332,3 +343,8 @@ addEventListener('keyup',(event) => {
 		break
 	}
 })
+
+// Add Event Listener for Start Button
+startbtn.addEventListener("click", function() {
+	console.log("Game Started")
+},false);
