@@ -8,10 +8,20 @@
     <script src="js/game.js" type="module"></script>
 </head>
 <body>
-    <div id="splashScreen" style="display: none;">
-        <h1 id="header">JS Platformer</h1>
-        <button id="startButton" type="button">Start</button>
-    </div>
-    <canvas id="gameCanvas" style="display: block;"></canvas>
+    <div id="container">
+        <div id="start-Screen" class="screen">
+            <div class="cell">
+                <h1 id="header">JS Platformer</h1>
+                <button id="start-Button" class="button-style" type="button">Start</button>
+            </div>
+        </div>
+        <canvas id="game-Canvas"></canvas>
+        <div id="gameover-Screen" class="screen"> 
+            <div class="cell">
+                <h1 id="header">GAME OVER</h1>
+                <button id="restart-Button" class="button-style" type="button">Restart</button>
+            </div>
+        </div>
+    </div>  
 </body>
 </html>

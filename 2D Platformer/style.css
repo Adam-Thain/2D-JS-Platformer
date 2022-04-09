@@ -1,6 +1,7 @@
-#gameCanvas 
+@font-face 
 {
-    border: 3px solid cyan;
+    font-family: 'big noodle titling';
+    src: url("./fonts/big_noodle_titling.ttf");
 }
 
 body
@@ -13,28 +14,44 @@ body
     height: 100vh;
 }
 
-@font-face 
+h1
 {
-    font-family: 'big noodle titling';
-    src: url("./fonts/big_noodle_titling.ttf");
-}
-
-#splashScreen
-{
-    text-align:center;
-}
-
-#header
-{    
     font-size: larger;
     font-style: italic;
     font-weight: normal;
     font-family: 'big noodle titling';
     color: red;
-    src: url("./fonts/big_noodle_titling.ttf");
 }
 
-#startButton
+#container
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid red;
+    height:576px;     
+    width:1024px;  
+}
+
+#start-Screen
+{
+    display: block;
+    text-align: center;
+}
+
+#game-Canvas 
+{
+    display: none;
+    border: 3px solid cyan;
+}
+
+#gameover-Screen
+{
+    display: none;
+    text-align: center;
+}
+
+.button-style
 {
     position: relative;
     display: inline-block;
@@ -44,7 +61,6 @@ body
     font-style: italic;
     font-weight: normal;
     font-family: 'big noodle titling';
-    src: url("./fonts/big_noodle_titling.ttf");
     width: 100px;
     height: 40px;
     text-align: center;

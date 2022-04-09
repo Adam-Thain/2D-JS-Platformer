@@ -1,6 +1,6 @@
-const canvas = document.getElementById('gameCanvas')
+const canvas = document.getElementById('game-Canvas')
 const c = canvas.getContext("2d")
-const startbtn = document.getElementById("startButton");
+const startbtn = document.getElementById("start-Button");
 
 // set canvas dimensions
 canvas.width = 1024
@@ -266,7 +266,15 @@ function animate(){
 	if (player.position.y > canvas.height)
 	{
 		lives -= 1
-		init()
+		if(lives == 0)
+		{
+			toggleScreen("gameover-Screen",true)
+			toggleScreen("game-Canvas",false)
+		}
+		else
+		{
+			init()
+		}
 	}
 
 	c.font = 'italic 32px big noodle titling'
@@ -347,4 +355,15 @@ addEventListener('keyup',(event) => {
 // Add Event Listener for Start Button
 startbtn.addEventListener("click", function() {
 	console.log("Game Started")
+	toggleScreen("start-Screen",false)
+	toggleScreen("game-Canvas",true)
 },false);
+
+
+// Change the Scene by changing the element display settings 
+function toggleScreen(id,toggle)
+{
+	let element = document.getElementById(id)
+	let display = (toggle) ? 'block' : 'none'
+	element.style.display = display
+}
