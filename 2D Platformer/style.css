@@ -21,6 +21,7 @@ h1
     font-weight: normal;
     font-family: 'big noodle titling';
     color: red;
+    margin: 0px;
 }
 
 #container
@@ -54,7 +55,7 @@ h1
 .button-style
 {
     position: relative;
-    display: inline-block;
+    display: block;
     background-color: red;
     border-radius: 5px;
     border-color: brown;
@@ -62,6 +63,7 @@ h1
     font-weight: normal;
     font-family: 'big noodle titling';
     width: 100px;
-    height: 40px;
+    height: 30px;
     text-align: center;
+    margin: 10px;
 }
