@@ -1,6 +1,8 @@
 const canvas = document.getElementById('game-Canvas')
 const c = canvas.getContext("2d")
 const startbtn = document.getElementById("start-Button");
+const restartbtn = document.getElementById("restart-Button");
+const exitbtn = document.getElementById("exit-Button")
 
 // set canvas dimensions
 canvas.width = 1024
@@ -145,7 +147,7 @@ let scrollOffset = 0
 let score = 0
 
 // Declare and initialize lives
-let lives = 3
+let lives = 0
 
 // Initialize the game
 function init()
@@ -296,13 +298,20 @@ function animate(){
 	c.fillText('Lives: ' + lives, 10, 70)
 }
 
-function startGame()
+// Change the Scene by changing the element display settings 
+function toggleScreen(id,toggle)
 {
-	console.log("Game Started")
+	let element = document.getElementById(id)
+	let display = (toggle) ? 'block' : 'none'
+	element.style.display = display
 }
 
-init()
-animate()
+// Reset Key Variables
+function resetVariables()
+{
+	score = 0
+	lives = 3
+}
 
 // Add Event Listener for Key press
 addEventListener('keydown',(event) => {
@@ -352,18 +361,33 @@ addEventListener('keyup',(event) => {
 	}
 })
 
-// Add Event Listener for Start Button
-startbtn.addEventListener("click", function() {
+// Add Event Listener for the Start Button
+startbtn.addEventListener("click", function() 
+{
 	console.log("Game Started")
+	resetVariables()
 	toggleScreen("start-Screen",false)
 	toggleScreen("game-Canvas",true)
+	init()
 },false);
 
-
-// Change the Scene by changing the element display settings 
-function toggleScreen(id,toggle)
+// Add Event Listener for the restart Button
+restartbtn.addEventListener("click", function() 
 {
-	let element = document.getElementById(id)
-	let display = (toggle) ? 'block' : 'none'
-	element.style.display = display
-}
+	console.log("Game Started")
+	resetVariables()
+	toggleScreen("gameover-Screen",false)
+	toggleScreen("game-Canvas",true)
+	init()
+},false);
+
+// Add Event Listener for the exit Button
+exitbtn.addEventListener("click", function() 
+{
+	console.log("Exiting Game")
+	toggleScreen("gameover-Screen",false)
+	toggleScreen("start-Screen",true)
+},false);
+
+init()
+animate()
